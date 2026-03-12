@@ -1,3 +1,5 @@
+"use client"
+import IntroScreen from "@/components/wedding/intro-screen"
 import { FallingPetals } from "@/components/wedding/falling-petals"
 import { MusicPlayer } from "@/components/wedding/music-player"
 import { HeroSection } from "@/components/wedding/hero-section"
@@ -10,8 +12,15 @@ import { InvitationSection } from "@/components/wedding/invitation-section"
 import { Footer } from "@/components/wedding/footer"
 
 export default function WeddingPage() {
+
+  const openInvitation = () => {
+    const audio = document.querySelector("audio") as HTMLAudioElement | null
+    audio?.play().catch(() => { })
+  }
+
   return (
     <main className="relative min-h-screen bg-background overflow-x-hidden">
+      <IntroScreen onOpen={openInvitation} />
       {/* Floating effects */}
       <FallingPetals />
       <MusicPlayer />

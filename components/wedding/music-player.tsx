@@ -17,10 +17,28 @@ export function MusicPlayer() {
 
   useEffect(() => {
     const audio = audioRef.current
-    if (audio) {
-      audio.muted = false
-      audio.play().catch(() => { })
-      setIsPlaying(!isPlaying)
+    if (!audio) return
+
+    const tryPlay = () => {
+      audio.play()
+        .then(() => {
+          setIsPlaying(true)
+        })
+        .catch(() => {
+          setIsPlaying(false)
+        })
+    }
+
+    // thử autoplay
+    tryPlay()
+
+    // nếu bị block thì chờ user interaction
+    document.addEventListener("click", tryPlay, { once: true })
+    document.addEventListener("touchstart", tryPlay, { once: true })
+
+    return () => {
+      document.removeEventListener("click", tryPlay)
+      document.removeEventListener("touchstart", tryPlay)
     }
   }, [])
 
@@ -38,6 +56,7 @@ export function MusicPlayer() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
+
       {/* Tooltip */}
       {showTooltip && (
         <div className="absolute bottom-full right-0 mb-3 animate-bounce">
@@ -105,9 +124,7 @@ export function MusicPlayer() {
 
       <audio
         ref={audioRef}
-        autoPlay
         loop
-        muted
         preload="auto"
       >
         <source src="/ct.mp3" type="audio/mpeg" />
