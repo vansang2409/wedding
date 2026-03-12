@@ -16,6 +16,8 @@ const galleryImages = [
   { src: "/images/8.jpg", alt: "Ảnh cưới 8" },
   { src: "/images/9.jpg", alt: "Ảnh cưới 9" },
   { src: "/images/10.jpg", alt: "Ảnh cưới 10" },
+  { src: "/images/11.jpg", alt: "Ảnh cưới 11" },
+  { src: "/images/12.jpg", alt: "Ảnh cưới 12" },
 ]
 
 export function GallerySection() {
@@ -145,7 +147,7 @@ export function GallerySection() {
               e.stopPropagation()
               goToPrevious()
             }}
-            className="absolute left-4 md:left-8 w-14 h-14 rounded-full bg-card/10 hover:bg-card/20 flex items-center justify-center transition-colors border border-card/20 group"
+            className="absolute z-[9999] left-4 md:left-8 w-14 h-14 rounded-full bg-card/10 hover:bg-card/20 flex items-center justify-center transition-colors border border-card/20 group"
             aria-label="Ảnh trước"
           >
             <ChevronLeft className="w-8 h-8 text-card group-hover:-translate-x-1 transition-transform" />
@@ -156,7 +158,7 @@ export function GallerySection() {
               e.stopPropagation()
               goToNext()
             }}
-            className="absolute right-4 md:right-8 w-14 h-14 rounded-full bg-card/10 hover:bg-card/20 flex items-center justify-center transition-colors border border-card/20 group"
+            className="absolute z-[9999] right-4 md:right-8 w-14 h-14 rounded-full bg-card/10 hover:bg-card/20 flex items-center justify-center transition-colors border border-card/20 group"
             aria-label="Ảnh sau"
           >
             <ChevronRight className="w-8 h-8 text-card group-hover:translate-x-1 transition-transform" />
