@@ -1,0 +1,873 @@
+.shell {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #efe7fb;
+  color: #341b2a;
+  font-family: var(--font-cormorant), Georgia, serif;
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+}
+
+.threeLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.threeLayer canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fallLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 13;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.snowflake,
+.petal {
+  position: absolute;
+  top: calc(var(--size) * -6);
+  left: var(--x);
+  width: var(--size);
+  height: var(--size);
+  opacity: var(--opacity);
+  will-change: transform, opacity;
+}
+
+.snowflake {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 0 8px rgba(255, 255, 255, 0.78),
+    0 0 18px rgba(246, 221, 255, 0.38);
+  animation: dam-ngo-snow-fall var(--duration) linear var(--delay) infinite;
+}
+
+.petal {
+  width: calc(var(--size) * 0.75);
+  height: calc(var(--size) * 1.35);
+  border-radius: 70% 30% 68% 32% / 62% 38% 62% 38%;
+  background:
+    radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.72), transparent 28%),
+    linear-gradient(145deg, rgba(245, 164, 188, 0.86), rgba(227, 122, 157, 0.54));
+  box-shadow: 0 8px 14px rgba(178, 90, 122, 0.12);
+  transform-origin: 50% 20%;
+  animation: dam-ngo-petal-fall var(--duration) ease-in-out var(--delay) infinite;
+}
+
+@keyframes dam-ngo-snow-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -8vh, 0) scale(0.82);
+  }
+  10% {
+    opacity: var(--opacity);
+  }
+  50% {
+    transform: translate3d(calc(var(--drift) * 0.45), 52vh, 0) scale(1);
+  }
+  90% {
+    opacity: var(--opacity);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift), 108vh, 0) scale(0.92);
+  }
+}
+
+@keyframes dam-ngo-petal-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
+  }
+  12% {
+    opacity: 0.62;
+  }
+  45% {
+    transform: translate3d(calc(var(--drift) * -0.35), 45vh, 0) rotate(calc(var(--rotate) * 0.45));
+  }
+  88% {
+    opacity: 0.58;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift), 110vh, 0) rotate(var(--rotate));
+  }
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: clamp(2rem, 3.5vw, 4.5rem) clamp(2.5rem, 4.8vw, 5.5rem);
+  overflow: hidden;
+  perspective: 1300px;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  isolation: isolate;
+}
+
+.stage::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  content: "";
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 19% 28%, rgba(255, 255, 255, 0.32), transparent 24%),
+    linear-gradient(90deg, rgba(239, 231, 251, 0.28) 0%, rgba(245, 239, 253, 0.58) 32%, rgba(242, 235, 252, 0.36) 64%, rgba(232, 219, 248, 0.24) 100%);
+}
+
+.layer {
+  transform: translateZ(var(--z));
+  transform-style: preserve-3d;
+  will-change: transform, filter;
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.02) brightness(1.01);
+  pointer-events: none;
+}
+
+.patterns {
+  position: absolute;
+  inset: clamp(2.5rem, 4vw, 4.75rem);
+  z-index: 3;
+  border: 1px solid rgba(126, 78, 166, 0.16);
+  pointer-events: none;
+}
+
+.patterns::before,
+.patterns::after {
+  position: absolute;
+  width: 7rem;
+  height: 7rem;
+  content: "";
+  border-color: rgba(203, 165, 109, 0.36);
+}
+
+.patterns::before {
+  top: 0;
+  left: 0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.patterns::after {
+  right: 0;
+  bottom: 0;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+
+.flowerLeft,
+.flowerRight {
+  position: absolute;
+  z-index: 4;
+  width: 32rem;
+  height: 29rem;
+  pointer-events: none;
+  background-image: url("/images/dam-ngo-lavender-bg.png");
+  background-repeat: no-repeat;
+  background-size: 118rem auto;
+  opacity: 0.58;
+  filter: saturate(1.06) drop-shadow(0 28px 45px rgba(108, 74, 132, 0.08));
+  mask-image: radial-gradient(circle at center, #000 0 48%, transparent 76%);
+}
+
+.flowerLeft {
+  left: -4rem;
+  bottom: -3.8rem;
+  background-position: left bottom;
+}
+
+.flowerRight {
+  top: -3.8rem;
+  right: -4rem;
+  background-position: right top;
+}
+
+.backLink {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 18;
+  display: none;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  color: #7f5aa7;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(127, 90, 167, 0.24);
+  border-radius: 999px;
+  box-shadow: 0 14px 35px rgba(96, 66, 124, 0.12);
+  backdrop-filter: blur(14px);
+}
+
+.backLink span {
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.groom,
+.bride {
+  position: absolute;
+  bottom: clamp(2.25rem, 4.2vh, 3.5rem);
+  z-index: 9;
+  height: auto;
+  pointer-events: none;
+  opacity: 0.96;
+  filter:
+    drop-shadow(0 34px 54px rgba(87, 65, 105, 0.18))
+    drop-shadow(0 0 18px rgba(255, 242, 252, 0.34));
+}
+
+.groom {
+  left: 2.75rem;
+  width: min(20vw, 22rem);
+}
+
+.bride {
+  right: 2.75rem;
+  width: min(19vw, 21rem);
+}
+
+.layout {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1.04fr 0.96fr;
+  gap: clamp(2.5rem, 4.6vw, 5.5rem);
+  align-items: center;
+  width: min(100%, 88rem);
+  height: 100%;
+  margin: 0 auto;
+  padding-top: 1rem;
+  transform-style: preserve-3d;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: clamp(1.5rem, 4.4vw, 4.75rem);
+  text-align: center;
+  transform-style: preserve-3d;
+}
+
+.eyebrow {
+  position: relative;
+  z-index: 11;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  padding: 0.5rem 1.25rem;
+  color: #6a3a20;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(0.8rem, 0.96vw, 1rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.eyebrow svg {
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+  opacity: 0.92;
+}
+
+.title {
+  position: relative;
+  z-index: 13;
+  margin: 0;
+  color: #4f244f;
+  font-family: var(--font-playfair), var(--font-cormorant), Georgia, serif;
+  font-size: clamp(4rem, 5.85vw, 7rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  text-shadow:
+    0 1px 0 #7d4a80,
+    0 2px 0 #744374,
+    0 3px 0 #693a6a,
+    0 11px 18px rgba(80, 38, 92, 0.18),
+    0 24px 48px rgba(94, 57, 117, 0.18);
+  cursor: default;
+  transform-style: preserve-3d;
+  will-change: transform, filter;
+}
+
+.title span {
+  position: relative;
+  z-index: 2;
+  display: block;
+  white-space: nowrap;
+  transform: translateZ(24px);
+}
+
+.title::before {
+  position: absolute;
+  inset: -0.22em -0.28em -0.34em;
+  z-index: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.44), transparent 48%),
+    radial-gradient(circle at 50% 68%, rgba(171, 117, 226, 0.16), transparent 62%);
+  border-radius: 999px;
+  filter: blur(16px);
+  opacity: 0.9;
+  transform: translateZ(-44px);
+}
+
+.title::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(110deg, transparent 0 38%, rgba(255, 255, 255, 0.44) 48%, transparent 58% 100%);
+  mix-blend-mode: screen;
+  opacity: 0.22;
+  transform: translateZ(32px);
+}
+
+.hearts {
+  position: relative;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin: 1.05rem 0 1.35rem;
+  transform-style: preserve-3d;
+}
+
+.hearts svg:first-child {
+  width: 2.5rem;
+  transform: rotate(-8deg);
+}
+
+.hearts svg:last-child {
+  width: 2.25rem;
+  transform: rotate(9deg);
+}
+
+.hearts path {
+  fill: #e6a5ad;
+  filter: drop-shadow(0 8px 10px rgba(168, 78, 110, 0.22));
+}
+
+.dateCard {
+  position: relative;
+  z-index: 14;
+  width: min(100%, 38rem);
+  padding: 1.65rem 2.35rem;
+  text-align: center;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(255, 250, 255, 0.48)),
+    radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(255, 255, 255, 0.58), transparent 38%);
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  border-radius: 1rem;
+  outline: 1px solid rgba(214, 170, 114, 0.3);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 -10px 20px rgba(116, 69, 83, 0.06) inset,
+    0 22px 55px rgba(116, 69, 83, 0.14),
+    0 44px 80px rgba(108, 74, 132, 0.12);
+  backdrop-filter: blur(18px);
+  cursor: default;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  will-change: transform, filter;
+}
+
+.dateCard::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  border-radius: inherit;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72), transparent 34%),
+    radial-gradient(circle at var(--pointer-x) var(--pointer-y), rgba(210, 161, 95, 0.18), transparent 42%);
+  opacity: 0.82;
+  transform: translateZ(18px);
+  pointer-events: none;
+}
+
+.dateCard::after {
+  position: absolute;
+  inset: auto 1.05rem -0.8rem;
+  z-index: -2;
+  height: 1.2rem;
+  content: "";
+  border-radius: 0 0 1rem 1rem;
+  background: linear-gradient(180deg, rgba(202, 168, 214, 0.28), rgba(116, 69, 132, 0.14));
+  filter: blur(0.5px);
+  transform: translateZ(-34px) rotateX(68deg);
+  transform-origin: top;
+  pointer-events: none;
+}
+
+.dateCard > * {
+  position: relative;
+  z-index: 2;
+  transform: translateZ(22px);
+}
+
+.dateCard span {
+  display: block;
+  color: #341b2a;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(1rem, 1.05vw, 1.18rem);
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  text-shadow: 0 8px 16px rgba(52, 27, 42, 0.08);
+}
+
+.dateCard strong {
+  display: block;
+  margin-top: 0.5rem;
+  color: #341b2a;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(3.2rem, 4.55vw, 4.75rem);
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: 0.015em;
+  font-variant-numeric: lining-nums tabular-nums;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.92),
+    0 3px 0 rgba(95, 51, 79, 0.08),
+    0 16px 24px rgba(52, 27, 42, 0.14);
+}
+
+.dateCard i {
+  display: block;
+  width: 14rem;
+  height: 1px;
+  margin: 1rem auto;
+  background: linear-gradient(90deg, transparent, rgba(210, 161, 95, 0.55), transparent);
+}
+
+.dateCard p {
+  max-width: 29.375rem;
+  margin: 0 auto;
+  color: #23141f;
+  font-size: clamp(0.98rem, 1.12vw, 1.16rem);
+  font-weight: 500;
+  line-height: 1.42;
+}
+
+.photoFrame {
+  position: relative;
+  z-index: 15;
+  width: min(100%, 29rem);
+  margin: 0 auto;
+  padding: 1.25rem;
+  transform-style: preserve-3d;
+  cursor: default;
+}
+
+.photoFrame img {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center top;
+  border: 4px solid #fff;
+  border-radius: 1.25rem;
+  outline: 2px solid rgba(203, 165, 109, 0.45);
+  box-shadow: 0 24px 64px rgba(95, 64, 82, 0.18);
+}
+
+.outerLine,
+.innerLine,
+.cornerTop,
+.cornerBottom {
+  position: absolute;
+  pointer-events: none;
+}
+
+.outerLine {
+  inset: -1.25rem;
+  border: 1px solid rgba(203, 165, 109, 0.55);
+  border-radius: 2rem;
+}
+
+.innerLine {
+  inset: -0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 1.65rem;
+}
+
+.cornerTop {
+  top: -2.5rem;
+  left: -2.5rem;
+  width: 8rem;
+  height: 8rem;
+  border-top: 1px solid rgba(203, 165, 109, 0.55);
+  border-left: 1px solid rgba(203, 165, 109, 0.55);
+}
+
+.cornerBottom {
+  right: -2.5rem;
+  bottom: -2.5rem;
+  width: 8rem;
+  height: 8rem;
+  border-right: 1px solid rgba(203, 165, 109, 0.55);
+  border-bottom: 1px solid rgba(203, 165, 109, 0.55);
+}
+
+.photoFrame figcaption {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  z-index: 3;
+  padding: 4.75rem 1.25rem 1.15rem;
+  color: #fff;
+  text-align: center;
+  background: linear-gradient(0deg, rgba(48, 34, 60, 0.78), transparent);
+  border-radius: 0 0 1.35rem 1.35rem;
+}
+
+.photoFrame figcaption strong {
+  display: block;
+  font-family: var(--font-playfair), var(--font-cormorant), Georgia, serif;
+  font-size: clamp(1.2rem, 1.35vw, 1.55rem);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.photoFrame figcaption span {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+
+@media (min-width: 1280px) {
+  .stage {
+    padding-inline: clamp(4rem, 5vw, 6rem);
+  }
+
+  .groom {
+    left: max(2.75rem, calc(50% - 56rem));
+    width: min(20vw, 25rem);
+  }
+
+  .bride {
+    right: max(2.75rem, calc(50% - 56rem));
+    width: min(19vw, 24rem);
+  }
+}
+
+@media (max-width: 1023px) {
+  .backLink {
+    display: inline-flex;
+  }
+
+  .groom,
+  .bride {
+    display: none;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 1.6rem;
+    max-width: 42rem;
+  }
+
+  .copy {
+    padding-left: 0;
+  }
+
+  .photoFrame {
+    width: min(100%, 24rem);
+  }
+
+  .photoFrame img {
+    height: auto;
+    aspect-ratio: 3 / 4;
+  }
+}
+
+@media (max-width: 767px) and (orientation: portrait) {
+  .stage {
+    left: 50%;
+    top: 50%;
+    width: 100svh;
+    height: 100svw;
+    min-width: 100svh;
+    min-height: 100svw;
+    padding: 0.55rem 0.9rem;
+    transform: translate(-50%, -50%) rotate(90deg);
+    transform-origin: center;
+  }
+
+  .backLink {
+    display: none;
+  }
+
+  .layout {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 0.7rem;
+    max-width: none;
+    padding-top: 0;
+  }
+
+  .copy {
+    padding-left: 2.9rem;
+  }
+
+  .eyebrow {
+    gap: 0.45rem;
+    margin-bottom: 0.65rem;
+    padding-block: 0.2rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.24em;
+  }
+
+  .eyebrow svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .title {
+    font-size: clamp(1.8rem, 7.2svh, 2.8rem);
+    line-height: 1;
+  }
+
+  .hearts {
+    gap: 0.5rem;
+    margin-block: 0.28rem;
+  }
+
+  .hearts svg:first-child,
+  .hearts svg:last-child {
+    width: 1.35rem;
+  }
+
+  .dateCard {
+    max-width: 16.8rem;
+    padding: 0.6rem 0.85rem;
+  }
+
+  .dateCard span {
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+  }
+
+  .dateCard strong {
+    margin-top: 0.1rem;
+    font-size: clamp(1.85rem, 7svh, 2.55rem);
+  }
+
+  .dateCard p {
+    display: none;
+  }
+
+  .dateCard i {
+    width: 8rem;
+    margin-block: 0.42rem 0;
+  }
+
+  .photoFrame {
+    width: min(43svh, 19rem);
+    padding: 0.85rem;
+  }
+
+  .photoFrame img {
+    height: min(42svh, 13.6rem);
+  }
+
+  .photoFrame figcaption {
+    right: 0.85rem;
+    bottom: 0.85rem;
+    left: 0.85rem;
+    padding: 3.2rem 0.8rem 0.75rem;
+  }
+
+  .photoFrame figcaption strong {
+    font-size: 1.05rem;
+  }
+
+  .photoFrame figcaption span {
+    margin-top: 0.25rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+  }
+
+  .groom,
+  .bride {
+    display: block;
+    bottom: -1.8rem;
+    width: 10.8rem;
+  }
+
+  .groom {
+    left: -4.8rem;
+  }
+
+  .bride {
+    right: -4.6rem;
+  }
+}
+
+@media (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
+  .stage {
+    padding: 0.55rem 0.9rem;
+  }
+
+  .backLink {
+    display: none;
+  }
+
+  .layout {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 0.7rem;
+    max-width: none;
+    padding-top: 0;
+  }
+
+  .copy {
+    padding-left: 2.9rem;
+  }
+
+  .eyebrow {
+    gap: 0.45rem;
+    margin-bottom: 0.65rem;
+    padding-block: 0.2rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.24em;
+  }
+
+  .eyebrow svg {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  .title {
+    font-size: clamp(1.8rem, 7.2svh, 2.8rem);
+    line-height: 1;
+  }
+
+  .hearts {
+    gap: 0.5rem;
+    margin-block: 0.28rem;
+  }
+
+  .hearts svg:first-child,
+  .hearts svg:last-child {
+    width: 1.35rem;
+  }
+
+  .dateCard {
+    max-width: 16.8rem;
+    padding: 0.6rem 0.85rem;
+  }
+
+  .dateCard span {
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+  }
+
+  .dateCard strong {
+    margin-top: 0.1rem;
+    font-size: clamp(1.85rem, 7svh, 2.55rem);
+  }
+
+  .dateCard p {
+    display: none;
+  }
+
+  .dateCard i {
+    width: 8rem;
+    margin-block: 0.42rem 0;
+  }
+
+  .photoFrame {
+    width: min(35svw, 22rem);
+    padding: 0.85rem;
+  }
+
+  .photoFrame img {
+    height: min(54svh, 14.2rem);
+  }
+
+  .photoFrame figcaption {
+    right: 0.85rem;
+    bottom: 0.85rem;
+    left: 0.85rem;
+    padding: 3.2rem 0.8rem 0.75rem;
+  }
+
+  .photoFrame figcaption strong {
+    font-size: 1.05rem;
+  }
+
+  .photoFrame figcaption span {
+    margin-top: 0.25rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+  }
+
+  .groom,
+  .bride {
+    display: block;
+    bottom: -1.8rem;
+    width: 10.8rem;
+  }
+
+  .groom {
+    left: -4.8rem;
+  }
+
+  .bride {
+    right: -4.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fallLayer {
+    display: none;
+  }
+
+  .layer,
+  .stage {
+    transform: none !important;
+  }
+}
