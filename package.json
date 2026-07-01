@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "verify:3d": "node scripts/verify-3d.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -56,6 +57,7 @@
     "recharts": "2.15.0",
     "sonner": "^1.7.1",
     "tailwind-merge": "^3.3.1",
+    "three": "^0.185.0",
     "vaul": "^1.1.2",
     "zod": "^3.24.1"
   },
@@ -64,6 +66,8 @@
     "@types/node": "^22",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
+    "@types/three": "^0.185.0",
+    "playwright-core": "^1.61.1",
     "postcss": "^8.5",
     "shadcn": "^4.0.0",
     "tailwindcss": "^4.2.0",
