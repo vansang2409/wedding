@@ -20,6 +20,7 @@ export function Countdown({ targetDate }: { targetDate: Date }) {
 
   useEffect(() => {
     setMounted(true)
+
     const calculateTimeLeft = () => {
       const difference = targetDate.getTime() - new Date().getTime()
 
@@ -38,15 +39,13 @@ export function Countdown({ targetDate }: { targetDate: Date }) {
     return () => clearInterval(timer)
   }, [targetDate])
 
-  if (!mounted) {
-    return null
-  }
+  if (!mounted) return null
 
   const timeUnits = [
-    { value: timeLeft.days, label: "Ngày", icon: "calendar" },
-    { value: timeLeft.hours, label: "Giờ", icon: "clock" },
-    { value: timeLeft.minutes, label: "Phút", icon: "timer" },
-    { value: timeLeft.seconds, label: "Giây", icon: "zap" },
+    { value: timeLeft.days, label: "Ngày" },
+    { value: timeLeft.hours, label: "Giờ" },
+    { value: timeLeft.minutes, label: "Phút" },
+    { value: timeLeft.seconds, label: "Giây" },
   ]
 
   return (
@@ -54,46 +53,37 @@ export function Countdown({ targetDate }: { targetDate: Date }) {
       {timeUnits.map((unit, index) => (
         <div
           key={unit.label}
-          className="flex flex-col items-center group"
+          className="group flex flex-col items-center"
           style={{ animationDelay: `${index * 0.1}s` }}
         >
           <div className="relative">
-            {/* Glow effect */}
-            <div className="absolute inset-0 bg-primary/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            
-            {/* Card */}
-            <div className="relative w-18 h-20 md:w-28 md:h-32 rounded-2xl bg-gradient-to-br from-card via-card to-card/90 backdrop-blur-md border border-primary/20 shadow-xl flex flex-col items-center justify-center overflow-hidden group-hover:border-primary/40 transition-all duration-300">
-              {/* Animated background */}
+            <div className="absolute inset-0 rounded-2xl bg-primary/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
+
+            <div className="relative flex h-20 w-18 flex-col items-center justify-center overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-card via-card to-card/90 shadow-xl backdrop-blur-md transition-all duration-300 group-hover:border-primary/40 md:h-32 md:w-28">
               <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent" />
-              
-              {/* Shimmer effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <div 
+              <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                <div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent"
-                  style={{ animation: 'shimmer 2s infinite' }}
+                  style={{ animation: "shimmer 2s infinite" }}
                 />
               </div>
-              
-              {/* Number with flip animation */}
-              <div className="relative">
-                <span 
-                  className="text-3xl md:text-5xl font-display font-bold text-primary tabular-nums"
-                  key={unit.value}
-                  style={{ animation: unit.label === 'Giây' ? 'flip 0.5s ease-out' : 'none' }}
-                >
-                  {String(unit.value).padStart(2, "0")}
-                </span>
-              </div>
+
+              <span
+                key={unit.value}
+                className="relative text-3xl font-bold tabular-nums text-primary md:text-5xl"
+                style={{ animation: unit.label === "Giây" ? "flip 0.5s ease-out" : "none" }}
+              >
+                {String(unit.value).padStart(2, "0")}
+              </span>
             </div>
           </div>
-          
-          {/* Label */}
-          <span className="mt-3 text-xs md:text-sm font-semibold text-muted-foreground uppercase tracking-[0.15em]">
+
+          <span className="mt-3 text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground md:text-sm">
             {unit.label}
           </span>
         </div>
       ))}
-      
+
       <style jsx>{`
         @keyframes shimmer {
           0% {

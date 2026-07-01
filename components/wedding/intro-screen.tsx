@@ -1,49 +1,45 @@
 "use client"
 
 import { useState } from "react"
+import { Heart } from "lucide-react"
 
 export default function IntroScreen({ onOpen }: { onOpen: () => void }) {
-    const [show, setShow] = useState(true)
+  const [show, setShow] = useState(true)
 
-    const handleOpen = () => {
-        setShow(false)
-        onOpen()
-    }
+  const handleOpen = () => {
+    setShow(false)
+    onOpen()
+  }
 
-    if (!show) return null
+  if (!show) return null
 
-    return (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#F3E8FF]/80 backdrop-blur-md" onClick={handleOpen}>
+  return (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#f8efff]/82 px-4 backdrop-blur-md"
+      onClick={handleOpen}
+    >
+      <div className="relative w-full max-w-[700px] overflow-hidden rounded-[1.75rem] border border-white/70 bg-gradient-to-b from-white/82 to-violet-100/84 px-8 py-20 text-center shadow-2xl">
+        <div className="absolute inset-x-8 top-8 h-px bg-gradient-to-r from-transparent via-primary/35 to-transparent" />
+        <h2 className="mb-12 text-2xl font-display text-purple-400 md:text-3xl">
+          The Wedding Invitation
+        </h2>
 
-            {/* Card */}
-            <div className="w-[90%] max-w-[700px] rounded-2xl bg-gradient-to-t from-violet-50 to-purple-100 shadow-2xl py-24 px-10 text-center">
+        <button
+          className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-t from-violet-100 to-violet-600 shadow-xl transition hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary/40"
+          aria-label="Mở thiệp cưới"
+          type="button"
+        >
+          <Heart className="h-11 w-11 fill-white text-white" />
+        </button>
 
-                {/* Title */}
-                <h2 className="text-2xl md:text-3xl text-purple-400 font-display mb-12">
-                    The Wedding Invitation
-                </h2>
+        <p className="mt-10 text-lg text-purple-400">
+          Chạm để mở thiệp
+        </p>
 
-                {/* Heart button */}
-                <button
-                    className="mx-auto flex h-20 w-20 items-center justify-center rounded-full 
-          bg-gradient-to-t from-violet-50 to-violet-600
-          shadow-xl hover:scale-110 transition"
-                >
-                    <span className="text-white flex items-center justify-center text-[60px] font-display">❤</span>
-                </button>
-
-                {/* Instruction */}
-                <p className="text-purple-400 text-lg mt-10">
-                    Chạm để mở thiệp
-                </p>
-
-                {/* Couple name */}
-                <h1 className="text-[clamp(23px,6vw,50px)] font-display text-gray-800 text-center">
-                    Văn Sang <span className="text-purple-300">&</span> Thu Thương
-                </h1>
-
-            </div>
-
-        </div>
-    )
+        <h1 className="mt-2 text-center font-display text-[clamp(23px,6vw,50px)] text-gray-800">
+          Văn Sang <span className="text-purple-300">&</span> Thu Thương
+        </h1>
+      </div>
+    </div>
+  )
 }

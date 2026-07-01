@@ -1,288 +1,251 @@
 "use client"
 
-import { Countdown } from "./countdown"
-import { useInView } from "@/hooks/use-in-view"
-import { ChevronDown, Sparkles } from "lucide-react"
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { CalendarDays, MapPin, Sparkles } from "lucide-react"
+import { Countdown } from "./countdown"
+import { WeddingScene3D } from "./wedding-scene-3d"
+import { useInView } from "@/hooks/use-in-view"
+
+const depthPhotos = [
+  { src: "/images/6.jpg", alt: "Chú rể Văn Sang", className: "left-[3%] top-[16%] rotate-[-8deg]" },
+  { src: "/images/3.jpg", alt: "Cô dâu Thu Thương", className: "right-[4%] top-[20%] rotate-[7deg]" },
+  { src: "/images/1.jpg", alt: "Khoảnh khắc cưới", className: "left-[10%] bottom-[13%] rotate-[6deg]" },
+  { src: "/images/10.jpg", alt: "Ảnh cưới Sang và Thương", className: "right-[11%] bottom-[14%] rotate-[-6deg]" },
+]
 
 export function HeroSection() {
   const { ref, inView } = useInView({ threshold: 0.1 })
+  const heroRef = useRef<HTMLElement | null>(null)
   const [mounted, setMounted] = useState(false)
+
+  const particles = useMemo(
+    () =>
+      Array.from({ length: 24 }, (_, index) => ({
+        left: (index * 37) % 100,
+        top: (index * 53) % 100,
+        size: 3 + (index % 4),
+        delay: (index % 8) * 0.35,
+        duration: 6 + (index % 7) * 0.8,
+      })),
+    [],
+  )
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Wedding date: December 25, 2027
+  useEffect(() => {
+    const hero = heroRef.current
+    if (!hero) return
+
+    const onPointerMove = (event: PointerEvent) => {
+      const rect = hero.getBoundingClientRect()
+      const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2
+      const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2
+      hero.style.setProperty("--tilt-x", `${(-y * 5).toFixed(2)}deg`)
+      hero.style.setProperty("--tilt-y", `${(x * 7).toFixed(2)}deg`)
+      hero.style.setProperty("--shift-x", `${(x * 16).toFixed(2)}px`)
+      hero.style.setProperty("--shift-y", `${(y * 12).toFixed(2)}px`)
+    }
+
+    const reset = () => {
+      hero.style.setProperty("--tilt-x", "0deg")
+      hero.style.setProperty("--tilt-y", "0deg")
+      hero.style.setProperty("--shift-x", "0px")
+      hero.style.setProperty("--shift-y", "0px")
+    }
+
+    hero.addEventListener("pointermove", onPointerMove)
+    hero.addEventListener("pointerleave", reset)
+    reset()
+
+    return () => {
+      hero.removeEventListener("pointermove", onPointerMove)
+      hero.removeEventListener("pointerleave", reset)
+    }
+  }, [])
+
   const weddingDate = new Date("2027-12-25T10:00:00")
 
   return (
     <section
-      ref={ref}
-      className="relative min-h-screen flex flex-col items-center justify-center px-4 py-20 overflow-hidden"
+      ref={heroRef}
+      className="relative min-h-[100svh] overflow-hidden bg-[linear-gradient(180deg,#fff9fd_0%,#f5ecff_42%,#fffdf8_100%)] px-4 py-16 md:py-20"
     >
-      {/* Animated gradient background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
-        <div 
-          className="absolute inset-0 opacity-30"
-          style={{
-            background: `
-              radial-gradient(circle at 20% 20%, var(--primary) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, var(--accent) 0%, transparent 50%),
-              radial-gradient(circle at 40% 60%, var(--primary) 0%, transparent 40%)
-            `,
-            filter: 'blur(100px)',
-            animation: 'pulse 8s ease-in-out infinite',
-          }}
+      <WeddingScene3D />
+
+      <div className="pointer-events-none absolute bottom-10 left-[max(0.75rem,calc(50%-43rem))] z-[4] hidden w-[165px] opacity-85 drop-shadow-[0_30px_45px_rgba(87,65,105,0.16)] xl:block 2xl:w-[210px]">
+        <Image
+          src="/images/groom-cartoon.png"
+          alt=""
+          width={919}
+          height={1712}
+          className="h-auto w-full"
+          priority
+          aria-hidden="true"
         />
       </div>
 
-      {/* Floating particles */}
+      <div className="pointer-events-none absolute bottom-12 right-[max(11rem,calc(50%-39rem))] z-[4] hidden w-[155px] opacity-85 drop-shadow-[0_30px_45px_rgba(87,65,105,0.16)] xl:block 2xl:w-[198px]">
+        <Image
+          src="/images/bride-cartoon.png"
+          alt=""
+          width={941}
+          height={1672}
+          className="h-auto w-full"
+          priority
+          aria-hidden="true"
+        />
+      </div>
+
+      <div className="absolute inset-0 z-[1] pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.92)_0%,rgba(255,255,255,0.46)_22%,rgba(255,255,255,0.22)_50%,rgba(255,255,255,0.46)_78%,rgba(255,255,255,0.92)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_48%,rgba(255,255,255,0.9)_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
+      </div>
+
       {mounted && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-primary/40 rounded-full"
+        <div className="absolute inset-0 z-[2] overflow-hidden pointer-events-none">
+          {particles.map((particle, index) => (
+            <span
+              key={index}
+              className="absolute rounded-full bg-primary/35 shadow-[0_0_18px_rgba(171,117,226,0.45)]"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `float-particle ${5 + Math.random() * 10}s ease-in-out infinite`,
-                animationDelay: `${Math.random() * 5}s`,
+                left: `${particle.left}%`,
+                top: `${particle.top}%`,
+                width: `${particle.size}px`,
+                height: `${particle.size}px`,
+                animation: `hero-particle ${particle.duration}s ease-in-out infinite`,
+                animationDelay: `${particle.delay}s`,
               }}
             />
           ))}
         </div>
       )}
 
-      {/* Elegant frame corners */}
-      <div className="absolute inset-8 md:inset-16 pointer-events-none">
-        <div className="absolute top-0 left-0 w-24 md:w-40 h-24 md:h-40 border-l-2 border-t-2 border-primary/30 rounded-tl-[3rem]" />
-        <div className="absolute top-0 right-0 w-24 md:w-40 h-24 md:h-40 border-r-2 border-t-2 border-primary/30 rounded-tr-[3rem]" />
-        <div className="absolute bottom-0 left-0 w-24 md:w-40 h-24 md:h-40 border-l-2 border-b-2 border-primary/30 rounded-bl-[3rem]" />
-        <div className="absolute bottom-0 right-0 w-24 md:w-40 h-24 md:h-40 border-r-2 border-b-2 border-primary/30 rounded-br-[3rem]" />
+      <div className="absolute inset-5 z-[2] hidden pointer-events-none sm:block md:inset-10">
+        <div className="absolute left-0 top-0 h-28 w-28 border-l border-t border-primary/30" />
+        <div className="absolute right-0 top-0 h-28 w-28 border-r border-t border-primary/30" />
+        <div className="absolute bottom-0 left-0 h-28 w-28 border-b border-l border-primary/30" />
+        <div className="absolute bottom-0 right-0 h-28 w-28 border-b border-r border-primary/30" />
       </div>
 
-      {/* Main content */}
-      <div
-        className={`relative z-10 text-center max-w-5xl mx-auto transition-all duration-1000 ${
-          inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}
-      >
-        {/* Sparkle decoration */}
-        <div className="flex items-center justify-center gap-4 mb-8">
-          <Sparkles className="w-5 h-5 text-primary/60 animate-pulse" />
-          <span className="px-6 py-2 text-xs font-semibold tracking-[0.4em] uppercase text-primary bg-primary/10 rounded-full border border-primary/20 backdrop-blur-sm">
-            Save The Date
-          </span>
-          <Sparkles className="w-5 h-5 text-primary/60 animate-pulse" style={{ animationDelay: '0.5s' }} />
-        </div>
+      <div ref={ref} className="relative z-10 mx-auto flex min-h-[calc(100svh-8rem)] max-w-7xl items-center justify-center">
+        <div className="relative w-full py-8 [perspective:1200px]">
+          <div
+            className="pointer-events-none absolute inset-0 hidden transition-transform duration-300 ease-out lg:block"
+            style={{
+              transform:
+                "translate3d(calc(var(--shift-x, 0px) * -0.35), calc(var(--shift-y, 0px) * -0.35), 0)",
+            }}
+          >
+            {depthPhotos.map((photo, index) => (
+              <div
+                key={photo.src}
+                className={`absolute h-44 w-32 overflow-hidden rounded-[1.35rem] border border-white/70 bg-white/50 p-1 shadow-[0_26px_80px_rgba(88,62,119,0.2)] backdrop-blur-sm ${photo.className}`}
+                style={{ animation: `photo-drift ${7 + index}s ease-in-out infinite`, animationDelay: `${index * 0.35}s` }}
+              >
+                <Image src={photo.src} alt={photo.alt} width={260} height={340} className="h-full w-full rounded-[1rem] object-cover" />
+              </div>
+            ))}
+          </div>
 
-        {/* Couple photos with animated rings */}
-        <div className="relative mb-12">
-          <div className="flex items-center justify-center gap-4 md:gap-8">
-            {/* Groom photo */}
-            <div className="relative group">
-              {/* Animated glow ring */}
-              <div className="absolute -inset-3 rounded-full bg-gradient-to-br from-primary/40 to-accent/40 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
-              <div 
-                className="absolute -inset-1 rounded-full border-2 border-primary/30"
-                style={{ animation: 'spin 20s linear infinite' }}
-              />
-              <div 
-                className="absolute -inset-2 rounded-full border border-dashed border-primary/20"
-                style={{ animation: 'spin 30s linear infinite reverse' }}
-              />
-              <div className="relative w-32 h-32 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-card shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
-                <Image
-                  src="/images/6.jpg"
-                  alt="Chú rể"
-                  width={176}
-                  height={176}
-                  className="object-cover w-full h-full"
-                />
-              </div>
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-4 py-1 bg-card rounded-full shadow-lg border border-primary/20">
-                <span className="text-xs font-semibold text-primary tracking-wider">GROOM</span>
-              </div>
+          <div
+            className={`mx-auto max-w-4xl text-center transition-all duration-1000 ${
+              inView ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            }`}
+            style={{
+              transform:
+                "rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translate3d(var(--shift-x, 0px), var(--shift-y, 0px), 0)",
+              transformStyle: "preserve-3d",
+            }}
+          >
+            <div className="mb-7 flex items-center justify-center gap-3">
+              <Sparkles className="h-5 w-5 text-primary/70" />
+              <span className="border-y border-primary/25 px-5 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-primary">
+                Save The Date
+              </span>
+              <Sparkles className="h-5 w-5 text-primary/70" />
             </div>
 
-            {/* Animated heart connector */}
-            <div className="relative flex flex-col items-center">
-              <div className="absolute top-1/2 -translate-y-1/2 w-16 md:w-24 h-px">
-                <div className="w-full h-full bg-gradient-to-r from-primary/40 via-primary to-primary/40 animate-pulse" />
+            <div className="mb-8 grid items-center gap-5 sm:grid-cols-[1fr_auto_1fr]">
+              <div className="justify-self-center">
+                <Portrait src="/images/6.jpg" alt="Chú rể Văn Sang" label="Văn Sang" />
               </div>
-              <div className="relative">
-                <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse" />
-                <div className="relative bg-gradient-to-br from-card to-card/80 rounded-full p-4 shadow-2xl border border-primary/30">
-                  <svg
-                    className="w-10 h-10 md:w-14 md:h-14 text-primary drop-shadow-lg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    style={{ animation: 'heartbeat 1.5s ease-in-out infinite' }}
-                  >
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                  </svg>
+
+              <div className="flex items-center justify-center">
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-primary/25 bg-white/55 shadow-[0_18px_60px_rgba(130,82,172,0.18)] backdrop-blur-md">
+                  <div className="absolute inset-2 rounded-full border border-dashed border-primary/25" style={{ animation: "spin 24s linear infinite" }} />
+                  <span className="font-display text-4xl text-primary">&</span>
                 </div>
               </div>
+
+              <div className="justify-self-center">
+                <Portrait src="/images/3.jpg" alt="Cô dâu Thu Thương" label="Thu Thương" />
+              </div>
             </div>
 
-            {/* Bride photo */}
-            <div className="relative group">
-              <div className="absolute -inset-3 rounded-full bg-gradient-to-br from-accent/40 to-primary/40 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
-              <div 
-                className="absolute -inset-1 rounded-full border-2 border-primary/30"
-                style={{ animation: 'spin 20s linear infinite reverse' }}
-              />
-              <div 
-                className="absolute -inset-2 rounded-full border border-dashed border-primary/20"
-                style={{ animation: 'spin 30s linear infinite' }}
-              />
-              <div className="relative w-32 h-32 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-card shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
-                <Image
-                  src="/images/3.jpg"
-                  alt="Cô dâu"
-                  width={176}
-                  height={176}
-                  className="object-cover w-full h-full"
-                />
+            <div className="mb-8 space-y-3">
+              <h1 className="text-[clamp(3rem,10vw,7.8rem)] font-display font-bold leading-[0.95] tracking-normal text-foreground">
+                Văn Sang
+              </h1>
+              <div className="mx-auto h-px w-40 bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+              <h1 className="text-[clamp(3rem,10vw,7.8rem)] font-display font-bold leading-[0.95] tracking-normal text-foreground">
+                Thu Thương
+              </h1>
+            </div>
+
+            <p className="mx-auto mb-9 max-w-xl text-lg italic tracking-wide text-muted-foreground md:text-xl">
+              "Hai trái tim, một tình yêu vĩnh cửu"
+            </p>
+
+            <div className="mb-9 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white/68 px-5 py-3 text-sm font-medium text-foreground shadow-[0_12px_36px_rgba(96,66,124,0.12)] backdrop-blur">
+                <CalendarDays className="h-4 w-4 text-primary" />
+                <span>Thứ Bảy, 25.12.2027</span>
               </div>
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-4 py-1 bg-card rounded-full shadow-lg border border-primary/20">
-                <span className="text-xs font-semibold text-primary tracking-wider">BRIDE</span>
+              <div className="hidden items-center gap-2 rounded-full border border-primary/20 bg-white/68 px-5 py-3 text-sm font-medium text-foreground shadow-[0_12px_36px_rgba(96,66,124,0.12)] backdrop-blur sm:inline-flex">
+                <MapPin className="h-4 w-4 text-primary" />
+                <span>Lễ cưới</span>
               </div>
             </div>
+
+            <Countdown targetDate={weddingDate} />
           </div>
         </div>
+      </div>
 
-        {/* Names with reveal animation */}
-        <div className="mb-10 space-y-4">
-          <div className="overflow-hidden">
-            <h1 
-              className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-foreground leading-tight tracking-wide"
-              style={{ animation: mounted ? 'slide-up 0.8s ease-out forwards' : 'none' }}
-            >
-              Văn Sang
-            </h1>
-          </div>
-          <div className="flex items-center justify-center gap-6">
-            <div className="h-px w-16 md:w-24 bg-gradient-to-r from-transparent via-primary/60 to-primary" />
-            <span 
-              className="font-serif text-3xl md:text-4xl text-primary"
-              style={{ animation: mounted ? 'fade-scale 0.5s ease-out 0.4s both' : 'none' }}
-            >
-              &
-            </span>
-            <div className="h-px w-16 md:w-24 bg-gradient-to-l from-transparent via-primary/60 to-primary" />
-          </div>
-          <div className="overflow-hidden">
-            <h1 
-              className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-foreground leading-tight tracking-wide"
-              style={{ animation: mounted ? 'slide-up 0.8s ease-out 0.2s forwards' : 'none' }}
-            >
-              Thu Thương
-            </h1>
-          </div>
-        </div>
-
-        {/* Elegant quote */}
-        <p className="text-lg md:text-xl text-muted-foreground font-serif mb-12 tracking-wide italic max-w-lg mx-auto">
-          "Hai trái tim, một tình yêu vĩnh cửu"
-        </p>
-
-        {/* Wedding date card */}
-        <div className="mb-12">
-          <div className="inline-flex flex-col items-center gap-4 px-10 py-6 bg-gradient-to-br from-card via-card to-card/90 backdrop-blur-md rounded-3xl border border-primary/20 shadow-2xl">
-            <div className="flex items-center gap-6 md:gap-10">
-              <div className="text-center">
-                <span className="block text-4xl md:text-6xl font-display font-bold text-primary">25</span>
-                <span className="block text-xs uppercase tracking-[0.2em] text-muted-foreground mt-1">Ngày</span>
-              </div>
-              <div className="w-px h-16 bg-gradient-to-b from-transparent via-primary/40 to-transparent" />
-              <div className="text-center">
-                <span className="block text-4xl md:text-6xl font-display font-bold text-primary">12</span>
-                <span className="block text-xs uppercase tracking-[0.2em] text-muted-foreground mt-1">Tháng</span>
-              </div>
-              <div className="w-px h-16 bg-gradient-to-b from-transparent via-primary/40 to-transparent" />
-              <div className="text-center">
-                <span className="block text-4xl md:text-6xl font-display font-bold text-primary">2027</span>
-                <span className="block text-xs uppercase tracking-[0.2em] text-muted-foreground mt-1">Năm</span>
-              </div>
-            </div>
-            <div className="text-sm text-muted-foreground font-medium tracking-wide">
-              Thứ Sáu
-            </div>
-          </div>
-        </div>
-
-        {/* Countdown */}
-        <Countdown targetDate={weddingDate} />
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium">Khám phá</span>
-            <div className="w-6 h-10 rounded-full border-2 border-primary/30 flex justify-center pt-2">
-              <div className="w-1.5 h-3 bg-primary/60 rounded-full animate-bounce" />
-            </div>
+      <div className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">Khám phá</span>
+          <div className="flex h-10 w-6 justify-center rounded-full border-2 border-primary/30 pt-2">
+            <div className="h-3 w-1.5 animate-bounce rounded-full bg-primary/60" />
           </div>
         </div>
       </div>
 
       <style jsx>{`
-        @keyframes float-particle {
+        @keyframes hero-particle {
           0%, 100% {
-            transform: translateY(0) translateX(0);
-            opacity: 0.4;
+            transform: translate3d(0, 0, 0) scale(1);
+            opacity: 0.34;
           }
-          25% {
-            transform: translateY(-20px) translateX(10px);
-            opacity: 0.8;
+          45% {
+            transform: translate3d(18px, -34px, 0) scale(1.5);
+            opacity: 0.78;
+          }
+        }
+
+        @keyframes photo-drift {
+          0%, 100% {
+            transform: translate3d(0, 0, 0);
           }
           50% {
-            transform: translateY(-10px) translateX(-10px);
-            opacity: 0.6;
-          }
-          75% {
-            transform: translateY(-30px) translateX(5px);
-            opacity: 0.8;
+            transform: translate3d(0, -12px, 40px);
           }
         }
-        @keyframes heartbeat {
-          0%, 100% {
-            transform: scale(1);
-          }
-          25% {
-            transform: scale(1.15);
-          }
-          50% {
-            transform: scale(1);
-          }
-          75% {
-            transform: scale(1.1);
-          }
-        }
-        @keyframes slide-up {
-          from {
-            transform: translateY(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-        @keyframes fade-scale {
-          from {
-            transform: scale(0);
-            opacity: 0;
-          }
-          to {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
+
         @keyframes spin {
           from {
             transform: rotate(0deg);
@@ -293,5 +256,20 @@ export function HeroSection() {
         }
       `}</style>
     </section>
+  )
+}
+
+function Portrait({ src, alt, label }: { src: string; alt: string; label: string }) {
+  return (
+    <div className="group relative">
+      <div className="absolute -inset-2 rounded-full border border-primary/20" style={{ animation: "spin 28s linear infinite" }} />
+      <div className="absolute -inset-4 rounded-full border border-dashed border-primary/15" style={{ animation: "spin 36s linear infinite reverse" }} />
+      <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-white shadow-[0_24px_70px_rgba(92,62,120,0.24)] transition-transform duration-500 group-hover:scale-105 md:h-44 md:w-44">
+        <Image src={src} alt={alt} width={220} height={220} className="h-full w-full object-cover" priority />
+      </div>
+      <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-primary/20 bg-white/88 px-4 py-1 text-xs font-semibold tracking-[0.16em] text-primary shadow-lg backdrop-blur">
+        {label}
+      </div>
+    </div>
   )
 }

@@ -1,6 +1,7 @@
 "use client"
 
 import { useInView } from "@/hooks/use-in-view"
+import Image from "next/image"
 import { Sparkles } from "lucide-react"
 
 export function InvitationSection() {
@@ -33,6 +34,27 @@ export function InvitationSection() {
               }}
             />
 
+            <div className="pointer-events-none absolute bottom-0 left-0 z-10 hidden w-36 -translate-x-8 translate-y-8 opacity-95 drop-shadow-[0_24px_40px_rgba(87,65,105,0.16)] lg:block xl:w-44">
+              <Image
+                src="/images/groom-cartoon.png"
+                alt=""
+                width={919}
+                height={1712}
+                className="h-auto w-full"
+                aria-hidden="true"
+              />
+            </div>
+            <div className="pointer-events-none absolute bottom-0 right-0 z-10 hidden w-36 translate-x-8 translate-y-8 opacity-95 drop-shadow-[0_24px_40px_rgba(87,65,105,0.16)] lg:block xl:w-44">
+              <Image
+                src="/images/bride-cartoon.png"
+                alt=""
+                width={941}
+                height={1672}
+                className="h-auto w-full"
+                aria-hidden="true"
+              />
+            </div>
+
             {/* Decorative corners with animation */}
             <div className="absolute top-6 left-6 w-20 h-20 md:w-32 md:h-32">
               <div className="absolute inset-0 border-t-2 border-l-2 border-primary/40 rounded-tl-3xl" />
@@ -52,7 +74,7 @@ export function InvitationSection() {
             </div>
 
             {/* Content */}
-            <div className="relative text-center">
+            <div className="relative z-20 text-center">
               <span className="inline-block px-6 py-2 text-xs font-semibold tracking-[0.3em] uppercase text-primary bg-primary/10 rounded-full border border-primary/20 mb-8">
                 Invitation
               </span>
@@ -60,6 +82,25 @@ export function InvitationSection() {
               <h2 className="text-4xl md:text-6xl font-display font-bold text-foreground mb-10">
                 Tran Trong Kinh Moi
               </h2>
+
+              <div className="mx-auto mb-10 flex h-36 max-w-xs items-end justify-center gap-3 lg:hidden">
+                <Image
+                  src="/images/groom-cartoon.png"
+                  alt=""
+                  width={919}
+                  height={1712}
+                  className="h-full w-auto drop-shadow-[0_18px_28px_rgba(87,65,105,0.14)]"
+                  aria-hidden="true"
+                />
+                <Image
+                  src="/images/bride-cartoon.png"
+                  alt=""
+                  width={941}
+                  height={1672}
+                  className="h-full w-auto drop-shadow-[0_18px_28px_rgba(87,65,105,0.14)]"
+                  aria-hidden="true"
+                />
+              </div>
 
               <div className="max-w-2xl mx-auto space-y-8 text-muted-foreground font-serif text-lg md:text-xl leading-relaxed">
                 <p className="first-letter:text-5xl first-letter:font-display first-letter:font-bold first-letter:text-primary first-letter:float-left first-letter:mr-3 first-letter:mt-1">
