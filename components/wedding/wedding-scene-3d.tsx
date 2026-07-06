@@ -89,7 +89,7 @@ export function WeddingScene3D() {
     })
 
     const archGeometry = new THREE.TorusGeometry(2.36, 0.028, 16, 168, Math.PI)
-    const archRings: THREE.Mesh[] = []
+    const archRings: THREE.Mesh<THREE.TorusGeometry, THREE.MeshPhysicalMaterial>[] = []
     for (let i = 0; i < 7; i += 1) {
       const arch = new THREE.Mesh(archGeometry, archMaterial)
       arch.position.set(0, -0.68 + i * 0.06, -i * 0.72)

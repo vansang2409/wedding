@@ -1,0 +1,32 @@
+export const journeyTokens = {
+  colors: {
+    cream: "#F6EFE4",
+    ivory: "#FFF9EF",
+    lavender: "#D9CCFF",
+    paleLavender: "#EFE9FF",
+    navy: "#071936",
+    plum: "#32162F",
+    orange: "#FF8517",
+    gold: "#F4C96B",
+    champagne: "#E8D5B9",
+    clay: "#B99C7A",
+    blush: "#F36C75",
+    smoke: "#8B8175",
+    glass: "rgba(255,255,255,0.62)",
+  },
+  shadows: {
+    object: "0 24px 70px rgba(66,48,28,0.13)",
+    photo: "0 18px 44px rgba(66,48,28,0.12)",
+    hero: "0 34px 90px rgba(48,35,22,0.22)",
+    glass: "0 24px 80px rgba(72,55,38,0.14)",
+    cta: "0 18px 40px rgba(255,138,28,0.28)",
+    lavender: "0 0 72px rgba(217,204,255,0.32)",
+    gold: "0 0 80px rgba(244,201,107,0.24)",
+    focus: "0 0 0 5px rgba(217,204,255,0.42), 0 18px 42px rgba(72,55,38,0.1)",
+  },
+  easing: {
+    primary: "cubic-bezier(0.22, 1, 0.36, 1)",
+    reveal: "cubic-bezier(0.16, 1, 0.3, 1)",
+    exit: "cubic-bezier(0.65, 0, 0.35, 1)",
+  },
+}

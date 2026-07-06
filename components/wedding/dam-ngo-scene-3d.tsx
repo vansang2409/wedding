@@ -79,7 +79,7 @@ export function DamNgoScene3D() {
     })
 
     const archGeometry = new THREE.TorusGeometry(2.85, 0.025, 16, 180, Math.PI)
-    const arches: THREE.Mesh[] = []
+    const arches: THREE.Mesh<THREE.TorusGeometry, THREE.MeshPhysicalMaterial>[] = []
     for (let i = 0; i < 8; i += 1) {
       const arch = new THREE.Mesh(archGeometry, archMaterial)
       arch.position.set(0, -0.7 + i * 0.045, -0.4 - i * 0.6)
@@ -140,7 +140,7 @@ export function DamNgoScene3D() {
       opacity: 0.72,
     })
 
-    const petals: THREE.Mesh[] = []
+    const petals: THREE.Mesh<THREE.ExtrudeGeometry, THREE.MeshPhysicalMaterial>[] = []
     for (let i = 0; i < 56; i += 1) {
       const petal = new THREE.Mesh(petalGeometry, petalMaterial.clone())
       petal.position.set(
