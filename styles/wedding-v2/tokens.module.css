@@ -1,0 +1,38 @@
+.tokens {
+  --w2-ivory: #fff8ee;
+  --w2-cream: #f7efe6;
+  --w2-paper: #fffaf5;
+  --w2-lavender: #d9ccff;
+  --w2-lavender-pale: #efe9ff;
+  --w2-lavender-mist: rgba(217, 204, 255, 0.42);
+  --w2-blush: #f3a6b5;
+  --w2-champagne: #e8d4b5;
+  --w2-cyan: #8feeff;
+  --w2-orchid: #d86dff;
+  --w2-star: #f8fbff;
+  --w2-copper: #c77a32;
+  --w2-gold: #d4a637;
+  --w2-plum: #2c2448;
+  --w2-navy: #071936;
+  --w2-muted: #786f7d;
+  --w2-white-glass: rgba(255, 255, 255, 0.66);
+
+  --w2-font-display: var(--font-playfair), Georgia, serif;
+  --w2-font-serif: var(--font-cormorant), Georgia, serif;
+  --w2-font-body: var(--font-cormorant), Georgia, serif;
+
+  --w2-space-1: 4px;
+  --w2-space-2: 8px;
+  --w2-space-3: 12px;
+  --w2-space-4: 16px;
+  --w2-space-5: 24px;
+  --w2-space-6: 32px;
+  --w2-space-7: 48px;
+
+  --w2-radius-frame: 30px;
+  --w2-radius-card: 18px;
+  --w2-shadow-soft: 0 28px 90px rgba(44, 36, 72, 0.2), 0 0 46px rgba(216, 109, 255, 0.13);
+  --w2-shadow-inner: inset 0 1px 0 rgba(255, 255, 255, 0.92), inset 0 0 34px rgba(143, 238, 255, 0.1);
+
+  --w2-ease-cinematic: cubic-bezier(0.2, 0.72, 0.24, 1);
+}
