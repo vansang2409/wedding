@@ -1,0 +1,833 @@
+.page {
+  --paper: #f7efe6;
+  --ink: #741c22;
+  --line: rgba(116, 28, 34, 0.3);
+  min-height: 100svh;
+  overflow-x: clip;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+.page[data-side="groom"] {
+  --paper: #f6f4eb;
+  --ink: #405725;
+  --line: rgba(64, 87, 37, 0.3);
+}
+
+.page :is(a, button) { -webkit-tap-highlight-color: transparent; }
+.page :is(a, button):focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+
+.cover {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--paper);
+  perspective: 1200px;
+}
+
+.cover::before {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--paper) 32%, white), transparent 46%),
+    linear-gradient(180deg, color-mix(in srgb, var(--paper) 94%, white), var(--paper));
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cover[data-opening="true"] {
+  background: transparent;
+  pointer-events: none;
+}
+
+.cover[data-opening="true"]::before { animation: coverLight 1.25s ease both; }
+
+.cover[data-opened="true"] {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.coverArt {
+  position: relative;
+  width: min(100vw, 56.28svh);
+  aspect-ratio: 941 / 1672;
+  overflow: hidden;
+  border-radius: clamp(0.9rem, 3vw, 1.45rem);
+  box-shadow:
+    0 1.5rem 5rem color-mix(in srgb, var(--ink) 17%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--ink) 14%, transparent);
+  transform: translate3d(0, 0, 0);
+  transform-origin: center 72%;
+  will-change: transform, opacity;
+}
+
+.coverArt > img {
+  object-fit: contain;
+  transform: scale(1.002);
+}
+
+.cover[data-opening="true"] .coverArt { animation: coverCardLift 1.4s cubic-bezier(0.76, 0, 0.24, 1) both; }
+
+.coverHit {
+  position: absolute;
+  right: 16%;
+  bottom: 5.5%;
+  left: 16%;
+  height: 10%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 2;
+  transition: opacity 0.18s ease;
+}
+
+.cover[data-opening="true"] .coverHit { opacity: 0; }
+
+.coverHit::after {
+  position: absolute;
+  top: 14%;
+  bottom: 14%;
+  left: -45%;
+  width: 34%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  content: "";
+  opacity: 0.8;
+  transform: skewX(-18deg);
+}
+
+.invitation {
+  width: min(100%, 941px);
+  margin: 0 auto;
+  overflow-x: clip;
+  background: var(--paper);
+}
+
+.designSection {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.designSection img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: scale(1.025);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.designSection::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: var(--paper);
+  content: "";
+  pointer-events: none;
+  transform: scaleY(1);
+  transform-origin: bottom;
+  transition: transform 1.05s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.page:not([data-opening="true"]) .designSection::after { transform: scaleY(0); }
+.designSection[data-visible="true"]::after { transform: scaleY(0); }
+.designSection[data-visible="true"] img { transform: scale(1); }
+
+.family {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  justify-items: center;
+  gap: clamp(2.1rem, 7vw, 4rem);
+  overflow: hidden;
+  padding: clamp(4.5rem, 16vw, 8.5rem) clamp(1.2rem, 7vw, 4.75rem) 0;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--paper) 28%, transparent), var(--paper) 94%),
+    url("/images/phi/album-bg-bride-light-v5.webp") center top / cover no-repeat;
+  text-align: center;
+}
+
+.page[data-side="groom"] .family {
+  background-image:
+    linear-gradient(180deg, color-mix(in srgb, var(--paper) 28%, transparent), var(--paper) 94%),
+    url("/images/phi/album-bg-groom-light-v5.webp");
+}
+
+.family::before {
+  position: absolute;
+  z-index: -1;
+  top: -2rem;
+  right: -8rem;
+  width: min(66vw, 35rem);
+  aspect-ratio: 1;
+  background: url("/images/phi/album-ornament-v4.webp") center / contain no-repeat;
+  content: "";
+  opacity: 0.22;
+  pointer-events: none;
+  transform: rotate(13deg);
+}
+
+.page[data-side="groom"] .family::before {
+  filter: hue-rotate(56deg) saturate(0.62) brightness(0.82);
+}
+
+.familyMonogram {
+  position: relative;
+  width: 5rem;
+  height: 4.3rem;
+  color: var(--ink);
+  font-size: 3.5rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.familyMonogram::after {
+  position: absolute;
+  right: 0;
+  bottom: -0.85rem;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ink), transparent);
+  content: "";
+  opacity: 0.55;
+}
+
+.familyMonogram span {
+  position: absolute;
+  top: 0;
+}
+
+.familyMonogram span:first-child { left: 0.45rem; }
+.familyMonogram span:last-child { right: 0.35rem; top: 0.45rem; }
+
+.familyHeading {
+  display: grid;
+  max-width: 46rem;
+  gap: 0.75rem;
+}
+
+.familyHeading p {
+  margin: 0;
+  font-size: clamp(0.72rem, 2.7vw, 1rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.familyHeading h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 5.8vw, 2.9rem);
+  font-weight: 500;
+  letter-spacing: 0.055em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.familyList {
+  display: grid;
+  width: min(100%, 48rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.familyHouse {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 1.1rem;
+  min-width: 0;
+  padding: 0 clamp(0.55rem, 3vw, 2.25rem);
+}
+
+.familyHouse + .familyHouse { border-left: 1px solid var(--line); }
+
+.familyHouse > p {
+  margin: 0;
+  color: color-mix(in srgb, var(--ink) 70%, var(--paper));
+  font-size: clamp(0.72rem, 2.8vw, 0.96rem);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.familyHouse > div {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.familyHouse strong {
+  font-size: clamp(0.92rem, 3.65vw, 1.45rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+}
+
+.familyCouple {
+  display: flex;
+  width: min(100%, 49rem);
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.55rem, 2.6vw, 1.5rem);
+  padding-top: clamp(0.6rem, 2vw, 1.4rem);
+  font-size: clamp(1.75rem, 7.2vw, 3.8rem);
+  font-weight: 500;
+  letter-spacing: 0.035em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.familyCouple i {
+  color: color-mix(in srgb, var(--ink) 72%, var(--paper));
+  font-size: 1.22em;
+  font-weight: 400;
+}
+
+.familyPortrait {
+  position: relative;
+  width: min(96%, 51rem);
+  margin: 0 0 clamp(1.25rem, 4vw, 2.5rem);
+  padding: clamp(0.35rem, 1.5vw, 0.7rem);
+  border: 1px solid color-mix(in srgb, var(--ink) 50%, transparent);
+  border-radius: clamp(1rem, 4vw, 1.75rem);
+  background: color-mix(in srgb, var(--paper) 78%, white);
+  box-shadow: 0 1.5rem 4rem color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.familyPortrait::before {
+  position: absolute;
+  z-index: 1;
+  top: -0.7rem;
+  left: 50%;
+  width: clamp(4.5rem, 20vw, 8rem);
+  height: 1.35rem;
+  background: color-mix(in srgb, var(--paper) 80%, white);
+  box-shadow: 0 0.2rem 0.7rem color-mix(in srgb, var(--ink) 9%, transparent);
+  content: "";
+  opacity: 0.82;
+  transform: translateX(-50%) rotate(-1.5deg);
+}
+
+.familyPortrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: clamp(0.72rem, 3vw, 1.25rem);
+}
+
+.page[data-opening="true"] .family[data-reveal] :is(.familyMonogram, .familyHeading, .familyHouse, .familyCouple, .familyPortrait) {
+  opacity: 0;
+  transform: translateY(1.4rem);
+  transition: opacity 0.8s ease, transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page[data-opening="true"] .family[data-reveal][data-visible="true"] :is(.familyMonogram, .familyHeading, .familyHouse, .familyCouple, .familyPortrait) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.family[data-visible="true"] .familyHeading { transition-delay: 0.08s !important; }
+.family[data-visible="true"] .familyHouse:first-child { transition-delay: 0.16s !important; }
+.family[data-visible="true"] .familyHouse:last-child { transition-delay: 0.24s !important; }
+.family[data-visible="true"] .familyCouple { transition-delay: 0.32s !important; }
+.family[data-visible="true"] .familyPortrait { transition-delay: 0.4s !important; }
+
+.page[data-opening="true"] :is(.gift, .locationAction)[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.75s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.page[data-opening="true"] :is(.gift, .locationAction)[data-reveal][data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  will-change: auto;
+}
+
+.locationAction {
+  display: grid;
+  justify-items: center;
+  padding: 1.5rem clamp(1.25rem, 7vw, 5rem) 3rem;
+  background: var(--paper);
+}
+
+.locationAction a {
+  display: flex;
+  width: min(100%, 34rem);
+  min-height: 3.2rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  font: 500 0.66rem/1 var(--font-playfair), Georgia, serif;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.locationAction a:active { transform: translateY(1px) scale(0.985); }
+.locationAction svg { width: 1.1rem; fill: none; stroke: currentColor; stroke-width: 1.5; }
+
+.album {
+  --album-dark: color-mix(in srgb, var(--ink) 88%, #210a0f);
+  --album-photo-radius: clamp(0.8rem, 3.2vw, 1.65rem);
+  position: relative;
+  overflow: hidden;
+  padding: 0 0 clamp(4rem, 14vw, 8rem);
+  background: var(--paper);
+}
+
+.albumScene {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  overflow: hidden;
+}
+
+.albumOpening {
+  height: clamp(38rem, 152vw, 84rem);
+  background: var(--album-dark) url("/images/phi/album-bg-bride-dark-v5.webp") center / cover no-repeat;
+}
+
+.albumOpening::before,
+.albumStory::before,
+.albumFinale::before {
+  position: absolute;
+  z-index: 6;
+  background: url("/images/phi/album-ornament-v4.webp") center / contain no-repeat;
+  content: "";
+  pointer-events: none;
+}
+
+.albumOpening::before {
+  top: -8%;
+  right: -20%;
+  width: 56%;
+  height: 104%;
+  opacity: 0.8;
+}
+
+.page[data-side="groom"] .album {
+  --album-dark: #394925;
+}
+
+.page[data-side="groom"] .albumOpening,
+.page[data-side="groom"] .albumFinale {
+  background-image: url("/images/phi/album-bg-groom-dark-v5.webp");
+}
+
+.page[data-side="groom"] .albumStory {
+  background-image: url("/images/phi/album-bg-groom-light-v5.webp");
+}
+
+.page[data-side="groom"] :is(.albumOpening, .albumStory, .albumFinale)::before {
+  filter: hue-rotate(56deg) saturate(0.62) brightness(0.82);
+}
+
+.albumOpening::after {
+  position: absolute;
+  z-index: 0;
+  inset: 4% 6% 16%;
+  border: clamp(0.22rem, 1vw, 0.55rem) solid color-mix(in srgb, var(--paper) 88%, transparent);
+  border-bottom: 0;
+  border-radius: 0;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 26%, transparent), inset 0 0 0 1px rgba(255,255,255,0.36);
+  content: "";
+  pointer-events: none;
+}
+
+.albumPhoto {
+  position: relative;
+  box-sizing: border-box;
+  display: block;
+  overflow: hidden;
+  border-radius: var(--album-photo-radius);
+  background: color-mix(in srgb, var(--ink) 7%, var(--paper));
+  box-shadow: 0 1.2rem 3rem color-mix(in srgb, #211410 24%, transparent);
+  color: inherit;
+  line-height: 0;
+}
+
+.albumPhoto img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  filter: saturate(0.92) contrast(0.96) brightness(1.025);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.9s ease;
+}
+
+.albumPhoto::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, rgba(255,255,255,0.12), transparent 38%, color-mix(in srgb, var(--ink) 7%, transparent));
+  content: "";
+  pointer-events: none;
+}
+
+.albumArch {
+  position: absolute;
+  z-index: 1;
+  top: 5.2%;
+  right: 7.2%;
+  left: 7.2%;
+  aspect-ratio: 1708 / 2560;
+  border-radius: var(--album-photo-radius);
+  clip-path: none;
+}
+
+.albumStory {
+  height: clamp(42rem, 180vw, 100rem);
+  margin-top: clamp(-5rem, -11vw, -2.7rem);
+  background: var(--paper) url("/images/phi/album-bg-bride-light-v5.webp") center / cover no-repeat;
+  clip-path: polygon(0 2.8%, 11% 1.5%, 24% 3%, 38% 1.2%, 53% 2.4%, 68% 0.8%, 82% 2.1%, 100% 0.5%, 100% 100%, 0 100%);
+}
+
+.albumStory::before {
+  right: -28%;
+  bottom: -2%;
+  width: 64%;
+  height: 75%;
+  opacity: 0.42;
+}
+
+.storyPortrait,
+.storyTall,
+.storyCardLeft,
+.storyCardCenter,
+.storyCardRight,
+.finaleCinematic,
+.finaleLeft,
+.finaleRight,
+.finaleClosing {
+  position: absolute;
+  height: auto;
+  aspect-ratio: 1708 / 2560;
+  border: clamp(0.22rem, 1vw, 0.55rem) solid color-mix(in srgb, var(--paper) 96%, #fff);
+}
+
+.storyPortrait {
+  z-index: 1;
+  top: 6%;
+  left: 2%;
+  width: 56%;
+  transform: rotate(-0.6deg);
+}
+
+.storyTall {
+  z-index: 2;
+  top: 12%;
+  right: 3%;
+  width: 52%;
+  transform: rotate(0.6deg);
+}
+
+.storyCardLeft {
+  z-index: 3;
+  bottom: 9%;
+  left: 2%;
+  width: 37%;
+  transform: rotate(-0.8deg);
+}
+
+.storyCardCenter {
+  z-index: 5;
+  bottom: 5%;
+  left: 29%;
+  width: 45%;
+  transform: rotate(-0.2deg);
+}
+
+.storyCardRight {
+  z-index: 4;
+  right: 2%;
+  bottom: 11%;
+  width: 36%;
+  transform: rotate(0.8deg);
+}
+
+.storyCardLeft img { object-position: 54% center; }
+.storyCardRight img { object-position: 47% center; }
+
+.albumFinale {
+  height: clamp(74rem, 312vw, 172rem);
+  margin-top: clamp(-2rem, -5vw, -1rem);
+  background: var(--album-dark) url("/images/phi/album-bg-bride-dark-v5.webp") center bottom / cover no-repeat;
+  clip-path: polygon(0 3%, 16% 1%, 34% 2.4%, 53% 0, 72% 2.2%, 88% 0.7%, 100% 2.8%, 100% 100%, 0 100%);
+}
+
+.albumFinale::before {
+  right: -19%;
+  bottom: -6%;
+  width: 60%;
+  height: 95%;
+  opacity: 0.9;
+}
+
+.albumFinale::after {
+  position: absolute;
+  z-index: 1;
+  top: 3%;
+  right: -16%;
+  width: 72%;
+  height: 88%;
+  border-radius: 52% 0 0 48%;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  content: "";
+  transform: rotate(7deg);
+}
+
+.finaleCinematic {
+  z-index: 2;
+  top: 7%;
+  left: 5%;
+  width: 90%;
+  border-radius: var(--album-photo-radius);
+}
+
+.finaleLeft {
+  z-index: 3;
+  top: 47%;
+  left: 3%;
+  width: 46%;
+  transform: rotate(-0.8deg);
+}
+
+.finaleRight {
+  z-index: 4;
+  top: 45%;
+  right: 3%;
+  width: 46%;
+  transform: rotate(0.8deg);
+}
+
+.finaleClosing {
+  z-index: 5;
+  right: 8%;
+  bottom: 2%;
+  width: 84%;
+  border-radius: var(--album-photo-radius);
+}
+
+.page[data-opening="true"] .albumScene[data-reveal] {
+  opacity: 0;
+  transform: translateY(38px) scale(0.99);
+  transition: opacity 1s ease, transform 1.25s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.page[data-opening="true"] .albumScene[data-reveal][data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  will-change: auto;
+}
+
+.albumPhoto:active img { transform: scale(0.985); }
+
+.gift {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: clamp(3.5rem, 13vw, 7rem) clamp(1.25rem, 7vw, 5rem);
+  border-block: 1px solid var(--line);
+  background: var(--paper);
+  text-align: center;
+}
+
+.gift::before,
+.gift::after {
+  position: absolute;
+  width: 1px;
+  height: 4rem;
+  background: var(--line);
+  content: "";
+}
+
+.gift::before { top: 0; }
+.gift::after { bottom: 0; }
+
+.giftHeading p {
+  margin: 0;
+  font: italic clamp(0.9rem, 3.5vw, 1.2rem)/1 var(--font-playfair), Georgia, serif;
+}
+
+.giftHeading h2 {
+  margin: 0.65rem 0 0.9rem;
+  font: 500 clamp(3.1rem, 13vw, 6rem)/0.88 var(--font-cormorant), Georgia, serif;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.giftHeading span {
+  display: block;
+  max-width: 30rem;
+  color: color-mix(in srgb, var(--ink) 68%, #777);
+  font-size: clamp(0.76rem, 2.9vw, 0.95rem);
+  line-height: 1.65;
+}
+
+.qrLink {
+  display: grid;
+  justify-items: center;
+  margin-top: 2rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.qrLink figure {
+  position: relative;
+  width: min(82vw, 22rem);
+  aspect-ratio: 746 / 995;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: clamp(0.9rem, 3vw, 1.35rem);
+  background: #fff;
+  transform: rotate(1.2deg) scale(0.975);
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.9s ease;
+}
+
+.gift[data-visible="true"] .qrLink figure {
+  box-shadow: 0 1.2rem 3rem color-mix(in srgb, var(--ink) 13%, transparent);
+  transform: rotate(0) scale(1);
+}
+
+.qrLink img { object-fit: contain; object-position: center; }
+.qrLink > span { margin-top: 0.85rem; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; }
+
+.footer {
+  padding: 2.5rem 1rem 3.5rem;
+  background: var(--paper);
+  text-align: center;
+}
+
+.footer a {
+  color: var(--ink);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-decoration: underline;
+  text-underline-offset: 0.4rem;
+  text-transform: uppercase;
+}
+
+.musicToggle {
+  position: fixed;
+  z-index: 20;
+  right: max(1rem, calc((100vw - 941px) / 2 + 1rem));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--paper) 70%, transparent);
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0.8rem 2rem color-mix(in srgb, var(--ink) 22%, transparent);
+  color: var(--paper);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.75rem) scale(0.9);
+  transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.musicToggle[data-visible="true"] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.musicToggle:active { transform: translateY(1px) scale(0.96); }
+
+.musicToggle svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+}
+
+.musicToggle[data-playing="true"] {
+  box-shadow:
+    0 0 0 0.3rem color-mix(in srgb, var(--ink) 12%, transparent),
+    0 0.8rem 2rem color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+@media (min-width: 942px) {
+  .page { padding-block: 3rem; }
+  .invitation { box-shadow: 0 0 0 1px var(--line), 0 2rem 6rem rgba(44, 31, 20, 0.12); }
+  .gift { grid-template-columns: minmax(0, 1fr) minmax(21rem, 0.8fr); column-gap: 4rem; text-align: left; }
+  .giftHeading { align-self: center; }
+  .qrLink { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; }
+  .albumPhoto:hover img { transform: scale(1.018); filter: saturate(1.04); }
+}
+
+@media (max-width: 480px) {
+  .family {
+    gap: 2.25rem;
+    padding-inline: 1rem;
+  }
+
+  .familyList {
+    width: min(100%, 23rem);
+    grid-template-columns: 1fr;
+    gap: 1.55rem;
+  }
+
+  .familyHouse { padding: 0; }
+
+  .familyHouse + .familyHouse {
+    padding-top: 1.55rem;
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+
+  .familyCouple {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.35rem;
+    font-size: clamp(1.35rem, 6.15vw, 1.75rem);
+  }
+
+  .familyPortrait { width: 100%; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .coverHit::after { animation: invitationSheen 3.4s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+}
+
+@keyframes invitationSheen {
+  0%, 58% { transform: translate3d(0, 0, 0) skewX(-18deg); }
+  82%, 100% { transform: translate3d(430%, 0, 0) skewX(-18deg); }
+}
+
+@keyframes coverCardLift {
+  0% { opacity: 1; transform: translate3d(0, 0, 0) rotateZ(0) scale(1); }
+  13% { opacity: 1; transform: translate3d(0, 0.75rem, 0) rotateZ(0) scale(0.985); }
+  100% { opacity: 0.96; transform: translate3d(0, -112svh, 0) rotateZ(-0.7deg) scale(0.965); }
+}
+
+@keyframes coverLight {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.025); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover, .coverArt, .coverArt > img, .page [data-reveal], .family *, .designSection::after, .designSection img, .albumPhoto img, .qrLink figure, .musicToggle { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  .cover { transition-delay: 0s !important; }
+  .page[data-opening="true"] [data-reveal] { opacity: 1; transform: none; }
+  .designSection::after { transform: scaleY(0); }
+  .designSection img, .qrLink figure { transform: none; }
+}
