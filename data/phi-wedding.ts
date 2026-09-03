@@ -29,7 +29,7 @@ export const phiWeddingData = {
     reception: "10:30",
     banquet: "11:00",
     ceremonyTime: "09:00",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=TDP+1+Phuong+Thanh+Nhat+Dak+Lak",
+    mapUrl: "https://maps.app.goo.gl/9JVkqX5bHi2iDuDm9",
     qrImage: "/images/phi/qr-nha-gai-cropped-v3.jpg",
     design: {
       cover: "/images/phi/design/bride-cover.png",

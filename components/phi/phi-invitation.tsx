@@ -8,6 +8,8 @@ import { useEffect, useRef, useState } from "react"
 import type { PhiInvitationData } from "@/data/phi-wedding"
 import styles from "./phi-invitation.module.css"
 
+const PHI_MUSIC_VIDEO_ID = "Y5VoCfbB6As"
+
 function DesignSection({ src, alt, eager = false }: { src: string; alt: string; eager?: boolean }) {
   return (
     <section className={styles.designSection} data-reveal>
@@ -135,15 +137,25 @@ export function PhiInvitation({ data }: { data: PhiInvitationData }) {
   const [opening, setOpening] = useState(false)
   const [musicPlaying, setMusicPlaying] = useState(false)
   const openTimer = useRef<number | null>(null)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const youtubeFrameRef = useRef<HTMLIFrameElement | null>(null)
 
-  useEffect(() => {
-    const audio = audioRef.current
-    if (!audio) return
+  const sendYoutubeCommand = (func: "playVideo" | "pauseVideo" | "setVolume", args: number[] = []) => {
+    youtubeFrameRef.current?.contentWindow?.postMessage(
+      JSON.stringify({ event: "command", func, args }),
+      "https://www.youtube.com",
+    )
+  }
 
-    audio.volume = 0.42
-    void audio.play().catch(() => undefined)
-  }, [data.side])
+  const playMusic = () => {
+    sendYoutubeCommand("setVolume", [42])
+    sendYoutubeCommand("playVideo")
+    setMusicPlaying(true)
+  }
+
+  const pauseMusic = () => {
+    sendYoutubeCommand("pauseVideo")
+    setMusicPlaying(false)
+  }
 
   useEffect(() => {
     if (openTimer.current) {
@@ -225,12 +237,7 @@ export function PhiInvitation({ data }: { data: PhiInvitationData }) {
   const openInvitation = () => {
     if (opening) return
     window.scrollTo(0, 0)
-
-    const audio = audioRef.current
-    if (audio) {
-      audio.volume = 0.42
-      void audio.play().catch(() => undefined)
-    }
+    playMusic()
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setOpening(true)
@@ -243,14 +250,8 @@ export function PhiInvitation({ data }: { data: PhiInvitationData }) {
   }
 
   const toggleMusic = () => {
-    const audio = audioRef.current
-    if (!audio) return
-
-    if (audio.paused) {
-      void audio.play().catch(() => undefined)
-    } else {
-      audio.pause()
-    }
+    if (musicPlaying) pauseMusic()
+    else playMusic()
   }
 
   const sideLabel = data.side === "bride" ? "nhà gái" : "nhà trai"
@@ -316,15 +317,18 @@ export function PhiInvitation({ data }: { data: PhiInvitationData }) {
         </footer>
       </main>
 
-      <audio
-        ref={audioRef}
-        src="/ct.mp3"
-        autoPlay
-        loop
-        preload="auto"
-        playsInline
-        onPlay={() => setMusicPlaying(true)}
-        onPause={() => setMusicPlaying(false)}
+      <iframe
+        ref={youtubeFrameRef}
+        className={styles.youtubePlayer}
+        src={`https://www.youtube.com/embed/${PHI_MUSIC_VIDEO_ID}?enablejsapi=1&controls=0&loop=1&playlist=${PHI_MUSIC_VIDEO_ID}&playsinline=1&rel=0`}
+        title="Váy Cưới — ERIK x Kai Đinh"
+        allow="autoplay; encrypted-media"
+        tabIndex={-1}
+        aria-hidden="true"
+        onLoad={() => {
+          sendYoutubeCommand("setVolume", [42])
+          if (musicPlaying) sendYoutubeCommand("playVideo")
+        }}
       />
 
       <button
