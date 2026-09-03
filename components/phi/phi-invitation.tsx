@@ -8,8 +8,6 @@ import { useEffect, useRef, useState } from "react"
 import type { PhiInvitationData } from "@/data/phi-wedding"
 import styles from "./phi-invitation.module.css"
 
-const PHI_MUSIC_VIDEO_ID = "Y5VoCfbB6As"
-
 function DesignSection({ src, alt, eager = false }: { src: string; alt: string; eager?: boolean }) {
   return (
     <section className={styles.designSection} data-reveal>
@@ -137,24 +135,17 @@ export function PhiInvitation({ data }: { data: PhiInvitationData }) {
   const [opening, setOpening] = useState(false)
   const [musicPlaying, setMusicPlaying] = useState(false)
   const openTimer = useRef<number | null>(null)
-  const youtubeFrameRef = useRef<HTMLIFrameElement | null>(null)
-
-  const sendYoutubeCommand = (func: "playVideo" | "pauseVideo" | "setVolume", args: number[] = []) => {
-    youtubeFrameRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ event: "command", func, args }),
-      "https://www.youtube.com",
-    )
-  }
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const playMusic = () => {
-    sendYoutubeCommand("setVolume", [42])
-    sendYoutubeCommand("playVideo")
-    setMusicPlaying(true)
+    const audio = audioRef.current
+    if (!audio) return
+    audio.volume = 0.42
+    void audio.play().catch(() => setMusicPlaying(false))
   }
 
   const pauseMusic = () => {
-    sendYoutubeCommand("pauseVideo")
-    setMusicPlaying(false)
+    audioRef.current?.pause()
   }
 
   useEffect(() => {
@@ -317,18 +308,14 @@ export function PhiInvitation({ data }: { data: PhiInvitationData }) {
         </footer>
       </main>
 
-      <iframe
-        ref={youtubeFrameRef}
-        className={styles.youtubePlayer}
-        src={`https://www.youtube.com/embed/${PHI_MUSIC_VIDEO_ID}?enablejsapi=1&controls=0&loop=1&playlist=${PHI_MUSIC_VIDEO_ID}&playsinline=1&rel=0`}
-        title="Váy Cưới — ERIK x Kai Đinh"
-        allow="autoplay; encrypted-media"
-        tabIndex={-1}
-        aria-hidden="true"
-        onLoad={() => {
-          sendYoutubeCommand("setVolume", [42])
-          if (musicPlaying) sendYoutubeCommand("playVideo")
-        }}
+      <audio
+        ref={audioRef}
+        src="/audio/phi-vay-cuoi.mp3"
+        loop
+        preload="auto"
+        playsInline
+        onPlay={() => setMusicPlaying(true)}
+        onPause={() => setMusicPlaying(false)}
       />
 
       <button
